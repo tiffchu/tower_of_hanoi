@@ -10,21 +10,28 @@
     <h1>Tower of Hanoi</h1>
     <div id="game-container">
         <div id="pegs">
-            <div class="peg" id="peg1">
-                <div class="disk" data-size="4"></div>
-                <div class="disk" data-size="3"></div>
-                <div class="disk" data-size="2"></div>
-                <div class="disk" data-size="1"></div>
-            </div>
+            <div class="peg" id="peg1"></div>
             <div class="peg" id="peg2"></div>
             <div class="peg" id="peg3"></div>
         </div>
         <div id="controls">
             <button id="reset-btn">Reset Game</button>
             <p>Moves: <span id="move-counter">0</span></p>
+            <p>Minimum moves: <span id="min-moves">7</span></p>
+            <div id="level-controls">
+                <h3>Number of Disks</h3>
+                <button id="decrease-level">-</button>
+                <span id="current-level">3</span>
+                <button id="increase-level">+</button>
+            </div>
         </div>
     </div>
+    <div id="instructions">
+        <h2>Instructions:</h2>
+        <p>Move all disks from the left pole to the right pole.</p>
+        <p>You can only move one disk at a time.</p>
+        <p>A larger disk cannot be placed on top of a smaller disk.</p>
+    </div>
     <script src="script.js"></script>
-    
 </body>
 </html>

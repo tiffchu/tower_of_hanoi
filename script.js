@@ -1,76 +1,136 @@
 // Tower of Hanoi Game Logic
 
 // Initialize game state
-let moves = 0;
-const pegs = [
-    document.getElementById('peg1'),
-    document.getElementById('peg2'),
-    document.getElementById('peg3')
-];
-const resetButton = document.getElementById('reset-btn');
-const moveCounter = document.getElementById('move-counter');
-
+let currentLevel = 3;
+let moveCounter = 0;
 let selectedDisk = null;
 
-// Function to check if a move is valid
-function isValidMove(fromPeg, toPeg) {
-    if (fromPeg.children.length === 0) return false;
-    if (toPeg.children.length === 0) return true;
-    return parseInt(fromPeg.lastElementChild.dataset.size) < parseInt(toPeg.lastElementChild.dataset.size);
-}
-
-// Function to move a disk
-function moveDisk(fromPeg, toPeg) {
-    const disk = fromPeg.lastElementChild;
-    toPeg.appendChild(disk);
-    moves++;
-    moveCounter.textContent = moves;
-    checkWin();
-}
-
-// Function to check if the game is won
-function checkWin() {
-    if (pegs[2].children.length === 4) {
-        setTimeout(() => {
-            alert(`Congratulations! You solved the puzzle in ${moves} moves!`);
-        }, 100);
+function createDisks(numDisks) {
+    const peg1 = document.getElementById('peg1');
+    peg1.innerHTML = '';
+    for (let i = numDisks; i > 0; i--) {
+        const disk = document.createElement('div');
+        disk.className = 'disk';
+        disk.setAttribute('data-size', i);
+        disk.draggable = true; 
+        disk.id = `disk-${i}`; //  an id for drag and drop
+        peg1.appendChild(disk);
     }
 }
 
-// Event listener for disk selection and movement
-pegs.forEach(peg => {
-    peg.addEventListener('click', () => {
-        if (!selectedDisk) {
-            if (peg.children.length > 0) {
-                selectedDisk = peg;
-                peg.lastElementChild.style.opacity = '0.5';
-            }
-        } else {
-            if (isValidMove(selectedDisk, peg)) {
-                moveDisk(selectedDisk, peg);
-            }
-            selectedDisk.lastElementChild.style.opacity = '1';
-            selectedDisk = null;
-        }
-    });
-});
-
-// Function to reset the game
-function resetGame() {
-    moves = 0;
-    moveCounter.textContent = moves;
-    pegs[1].innerHTML = '';
-    pegs[2].innerHTML = '';
-    pegs[0].innerHTML = `
-        <div class="disk" data-size="4"></div>
-        <div class="disk" data-size="3"></div>
-        <div class="disk" data-size="2"></div>
-        <div class="disk" data-size="1"></div>
-    `;
+function updateLevel(change) {
+    currentLevel += change;
+    if (currentLevel < 3) currentLevel = 3;
+    if (currentLevel > 8) currentLevel = 8;
+    document.getElementById('current-level').textContent = currentLevel;
+    updateMinMoves();
+    resetGame();
 }
 
-// Event listener for reset button
-resetButton.addEventListener('click', resetGame);
+function updateMinMoves() {
+    const minMoves = Math.pow(2, currentLevel) - 1;
+    document.getElementById('min-moves').textContent = minMoves;
+}
+
+function resetGame() {
+    moveCounter = 0;
+    document.getElementById('move-counter').textContent = moveCounter;
+    createDisks(currentLevel);
+    initializeDragAndDrop();
+    updateMinMoves();
+    // Additional reset logic here
+}
+
+function initializeDragAndDrop() {
+    const disks = document.querySelectorAll('.disk');
+    const pegs = document.querySelectorAll('.peg');
+
+    disks.forEach(disk => {
+        disk.addEventListener('mousedown', selectDisk);
+        disk.addEventListener('dragstart', dragStart);
+        disk.addEventListener('dragend', dragEnd);
+    });
+
+    pegs.forEach(peg => {
+        peg.addEventListener('click', placeDisk);
+        peg.addEventListener('dragover', dragOver);
+        peg.addEventListener('drop', drop);
+    });
+}
+
+function selectDisk(e) {
+    if (!selectedDisk && e.target.parentElement.lastElementChild === e.target) {
+        selectedDisk = e.target;
+        selectedDisk.style.opacity = '0.5';
+    }
+}
+
+function placeDisk(e) {
+    if (selectedDisk) {
+        const targetPeg = e.currentTarget;
+        moveDisk(targetPeg);
+    }
+}
+
+function dragStart(e) {
+    if (e.target.parentElement.lastElementChild === e.target) {
+        selectedDisk = e.target;
+        e.dataTransfer.setData('text/plain', e.target.id);
+        setTimeout(() => {
+            e.target.style.display = 'none';
+        }, 0);
+    } else {
+        e.preventDefault();
+    }
+}
+
+function dragEnd(e) {
+    e.target.style.display = 'block';
+    selectedDisk = null;
+}
+
+function dragOver(e) {
+    e.preventDefault();
+}
+
+function drop(e) {
+    e.preventDefault();
+    const targetPeg = e.target.closest('.peg');
+    moveDisk(targetPeg);
+}
+
+function moveDisk(targetPeg) {
+    const topDisk = targetPeg.lastElementChild;
+
+    if (!topDisk || parseInt(selectedDisk.getAttribute('data-size')) < parseInt(topDisk.getAttribute('data-size'))) {
+        targetPeg.appendChild(selectedDisk);
+        selectedDisk.style.opacity = '1';
+        selectedDisk.style.display = 'block';
+        selectedDisk = null;
+        moveCounter++;
+        document.getElementById('move-counter').textContent = moveCounter;
+        checkWinCondition();
+    } else {
+        selectedDisk.style.opacity = '1';
+        selectedDisk.style.display = 'block';
+        selectedDisk = null;
+    }
+}
+
+function checkWinCondition() {
+    const lastPeg = document.getElementById('peg3');
+    if (lastPeg.children.length === currentLevel) {
+        alert(`Congratulations! You solved the puzzle in ${moveCounter} moves!`);
+    }
+}
+
+document.getElementById('decrease-level').addEventListener('click', () => updateLevel(-1));
+document.getElementById('increase-level').addEventListener('click', () => updateLevel(1));
+document.getElementById('reset-btn').addEventListener('click', resetGame);
 
 // Initialize the game
 resetGame();
+initializeDragAndDrop();
+updateMinMoves();
+
+
