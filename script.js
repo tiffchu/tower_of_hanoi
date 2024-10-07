@@ -35,10 +35,15 @@ function updateMinMoves() {
 function resetGame() {
     moveCounter = 0;
     document.getElementById('move-counter').textContent = moveCounter;
+    
+    // clear pegs
+    document.querySelectorAll('.peg').forEach(peg => {
+        peg.innerHTML = '';
+    });
+    
     createDisks(currentLevel);
     initializeDragAndDrop();
     updateMinMoves();
-    // Additional reset logic here
 }
 
 function initializeDragAndDrop() {
