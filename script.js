@@ -137,5 +137,3 @@ document.getElementById('reset-btn').addEventListener('click', resetGame);
 resetGame();
 initializeDragAndDrop();
 updateMinMoves();
-
-
