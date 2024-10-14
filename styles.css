@@ -5,19 +5,38 @@
     box-sizing: border-box;
 }
 
+:root {
+    --bg-color: #ffffff;
+    --text-color: #333333;
+    --primary-color: #1e5799;
+    --secondary-color: #2989d8;
+    --container-bg: #f0f0f0;
+    --disk-shadow: rgba(0, 0, 0, 0.1);
+}
+
+.dark-mode {
+    --bg-color: #1a1a1a;
+    --text-color: #ffffff;
+    --primary-color: #4a90e2;
+    --secondary-color: #64b5f6;
+    --container-bg: #2c2c2c;
+    --disk-shadow: rgba(255, 255, 255, 0.1);
+}
+
 body {
     font-family: 'Roboto', Arial, sans-serif;
-    background: linear-gradient(135deg, #1e5799 0%,#2989d8 50%,#207cca 51%,#7db9e8 100%);
+    background: var(--bg-color);
+    color: var(--text-color);
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
     padding: 20px;
-    color: #333;
+    transition: background-color 0.3s, color 0.3s;
 }
 
 .game-wrapper {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: var(--container-bg);
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
     padding: 30px;
@@ -25,18 +44,39 @@ body {
     width: 100%;
 }
 
-h1 {
-    color: #1e5799;
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
-    text-align: center;
+}
+
+h1 {
+    color: var(--primary-color);
     font-size: 2.5em;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+    text-shadow: 2px 2px 4px var(--disk-shadow);
+}
+
+#theme-toggle {
+    background-color: var(--primary-color);
+    color: var(--bg-color);
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s, transform 0.1s;
+    font-size: 16px;
+}
+
+#theme-toggle:hover {
+    background-color: var(--secondary-color);
+    transform: translateY(-2px);
 }
 
 #game-container {
-    background-color: #fff;
+    background-color: var(--bg-color);
     border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0 10px var(--disk-shadow);
     padding: 20px;
     margin-bottom: 20px;
 }
@@ -46,20 +86,20 @@ h1 {
     justify-content: space-around;
     margin-bottom: 20px;
     padding: 20px 0;
-    background-color: #f0f0f0;
+    background-color: var(--container-bg);
     border-radius: 10px;
 }
 
 .peg {
     width: 20px;
     height: 200px;
-    background-color: #8b4513;
+    background-color: var(--primary-color);
     border-radius: 5px;
     display: flex;
     flex-direction: column-reverse;
     align-items: center;
     justify-content: flex-start;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px var(--disk-shadow);
 }
 
 .disk {
@@ -68,12 +108,12 @@ h1 {
     margin-bottom: 5px;
     cursor: pointer;
     transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px var(--disk-shadow);
 }
 
 .disk:hover {
     transform: scale(1.05);
-    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 8px var(--disk-shadow);
 }
 
 .disk[data-size="1"] { width: 40px; background-color: #FF6B6B; }
@@ -94,8 +134,8 @@ h1 {
 }
 
 button {
-    background-color: #1e5799;
-    color: #fff;
+    background-color: var(--primary-color);
+    color: var(--bg-color);
     border: none;
     padding: 10px 20px;
     border-radius: 5px;
@@ -105,7 +145,7 @@ button {
 }
 
 button:hover {
-    background-color: #2989d8;
+    background-color: var(--secondary-color);
     transform: translateY(-2px);
 }
 
@@ -142,36 +182,6 @@ button:active {
     font-size: 18px;
     font-weight: bold;
     margin: 0 10px;
-}
-
-#instructions {
-    background-color: #f0f0f0;
-    border-radius: 10px;
-    padding: 20px;
-    margin-top: 20px;
-}
-
-#instructions h2 {
-    margin-bottom: 10px;
-    color: #1e5799;
-}
-
-#instructions ul {
-    list-style-type: none;
-    padding-left: 20px;
-}
-
-#instructions li {
-    margin-bottom: 5px;
-    position: relative;
-}
-
-#instructions li::before {
-    content: "•";
-    color: #1e5799;
-    font-weight: bold;
-    position: absolute;
-    left: -15px;
 }
 
 @keyframes diskHover {

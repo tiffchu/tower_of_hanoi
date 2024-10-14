@@ -129,6 +129,23 @@ function checkWinCondition() {
     }
 }
 
+// Theme toggle functionality
+const themeToggle = document.getElementById('theme-toggle');
+const body = document.body;
+
+themeToggle.addEventListener('click', () => {
+    body.classList.toggle('dark-mode');
+    updateThemeButtonText();
+});
+
+function updateThemeButtonText() {
+    if (body.classList.contains('dark-mode')) {
+        themeToggle.textContent = 'Toggle Light Mode';
+    } else {
+        themeToggle.textContent = 'Toggle Dark Mode';
+    }
+}
+
 document.getElementById('decrease-level').addEventListener('click', () => updateLevel(-1));
 document.getElementById('increase-level').addEventListener('click', () => updateLevel(1));
 document.getElementById('reset-btn').addEventListener('click', resetGame);
@@ -137,3 +154,4 @@ document.getElementById('reset-btn').addEventListener('click', resetGame);
 resetGame();
 initializeDragAndDrop();
 updateMinMoves();
+updateThemeButtonText();
